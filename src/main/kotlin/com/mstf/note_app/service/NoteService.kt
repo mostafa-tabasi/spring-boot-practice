@@ -6,6 +6,7 @@ import com.mstf.note_app.database.repository.NoteRepository
 import com.mstf.note_app.util.exception.NotesNotFoundException
 import jakarta.validation.Valid
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,8 +14,15 @@ import java.time.Instant
 
 @Service
 class NoteService(
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepository,
+    @param:Value("\${spring.application.version}")
+    private val version: String,
 ) {
+
+    init {
+        println("Spring Boot backend running with version $version")
+    }
+
     fun save(
         @Valid @RequestBody body: NoteRequest,
     ): Note {
