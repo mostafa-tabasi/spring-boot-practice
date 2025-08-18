@@ -1,0 +1,7 @@
+spring:
+  application:
+    version: 1.0.0-dev
+  #   to set a static password for basic authentication (for testing purposes)
+  security:
+    user:
+      password: test

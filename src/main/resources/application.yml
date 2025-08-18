@@ -1,4 +1,7 @@
 spring:
+#  we can set the environment like the following codes instead of defining in environment variables
+#  profiles:
+#    active: dev
   application:
     name: note_app
   data:
@@ -16,6 +19,3 @@ server:
 
 jwt:
   secret: ${JWT_SECRET_BASE64}
-
-#   to set a static password for basic authentication (for testing purposes)
-#spring.security.user.password=test
