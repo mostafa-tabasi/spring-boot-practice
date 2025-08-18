@@ -1,19 +1,22 @@
 package com.mstf.note_app.controller
 
 import com.mstf.note_app.database.model.Note
-import com.mstf.note_app.database.repository.NoteRepository
-import com.mstf.note_app.util.exception.NotesNotFoundException
+import com.mstf.note_app.service.NoteService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import org.bson.types.ObjectId
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
 @RestController
 @RequestMapping("/notes")
 class NoteController(
-    private val repository: NoteRepository,
+    private val noteService: NoteService,
 ) {
 
     data class NoteRequest(
@@ -37,41 +40,20 @@ class NoteController(
     fun save(
         @Valid @RequestBody body: NoteRequest,
     ): NoteResponse {
-        val ownerId = SecurityContextHolder.getContext().authentication.principal as String
-        val note = repository.save(
-            Note(
-                id = body.id?.let { ObjectId(it) } ?: ObjectId.get(),
-                title = body.title,
-                content = body.content,
-                color = body.color,
-                createdAt = Instant.now(),
-                ownerId = ObjectId(ownerId),
-            )
-        )
-
+        val note = noteService.save(body)
         return note.toResponse()
     }
 
     @GetMapping
     fun findByOwnerId(): List<NoteResponse> {
-        val ownerId = SecurityContextHolder.getContext().authentication.principal as String
-        return repository.findByOwnerId(ObjectId(ownerId)).map {
-            it.toResponse()
-        }
+        val notes = noteService.findByOwnerId()
+        return notes.map { it.toResponse() }
     }
 
     @DeleteMapping(path = ["/{id}"])
     fun deleteById(
         @PathVariable id: String,
-    ) {
-        val note = repository.findById(ObjectId(id)).orElseThrow {
-            NotesNotFoundException(id)
-        }
-        val ownerId = SecurityContextHolder.getContext().authentication.principal as String
-        if (note.ownerId.toHexString() == ownerId) {
-            repository.deleteById(ObjectId(id))
-        }
-    }
+    ) = noteService.deleteById(id)
 }
 
 private fun Note.toResponse(): NoteController.NoteResponse {
