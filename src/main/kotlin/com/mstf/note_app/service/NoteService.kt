@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestBody
 import java.time.Instant
 
+// another way to specify environment
+// we can have another NoteService class and annotate it with @Profile("prod")
+//@Profile("dev")
 @Service
 class NoteService(
     private val noteRepository: NoteRepository,
