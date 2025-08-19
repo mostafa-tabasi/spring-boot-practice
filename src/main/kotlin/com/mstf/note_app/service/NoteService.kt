@@ -1,5 +1,6 @@
 package com.mstf.note_app.service
 
+import com.mstf.note_app.config.NotesConfig
 import com.mstf.note_app.controller.NoteController.NoteRequest
 import com.mstf.note_app.database.model.Note
 import com.mstf.note_app.database.repository.NoteRepository
@@ -17,10 +18,15 @@ class NoteService(
     private val noteRepository: NoteRepository,
     @param:Value("\${spring.application.version}")
     private val version: String,
+    @param:Value("\${MY_CUSTOM_VARIABLE}")
+    private val myCustomVariable: String,
+    private val notesConfig: NotesConfig,
 ) {
 
     init {
         println("Spring Boot backend running with version $version")
+        println("My custom variable is $myCustomVariable")
+        println("Notes config is $notesConfig")
     }
 
     fun save(

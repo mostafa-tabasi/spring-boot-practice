@@ -19,3 +19,17 @@ server:
 
 jwt:
   secret: ${JWT_SECRET_BASE64}
+
+# custom values to have access to in the code
+notes:
+  search:
+    ignore-case: true
+    min-length: 3
+  validation:
+    min-content-length: 5
+    max-content-length: 500
+    require_author: true
+    allowed-categories:
+      - "motivational"
+      - "funny"
+      - "tech"
