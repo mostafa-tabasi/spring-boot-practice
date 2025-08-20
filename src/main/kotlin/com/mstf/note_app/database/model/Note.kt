@@ -7,6 +7,7 @@ import java.time.Instant
 
 @Document("notes")
 data class Note(
+    val author: String,
     val title: String,
     val content: String,
     val color: Long,

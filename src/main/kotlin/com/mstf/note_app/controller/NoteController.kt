@@ -2,15 +2,12 @@ package com.mstf.note_app.controller
 
 import com.mstf.note_app.database.model.Note
 import com.mstf.note_app.service.NoteService
+import com.mstf.note_app.util.Password
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import jakarta.validation.constraints.Pattern
+import org.hibernate.validator.constraints.Length
+import org.springframework.web.bind.annotation.*
 import java.time.Instant
 
 @RestController
@@ -21,11 +18,23 @@ class NoteController(
 
     data class NoteRequest(
         val id: String?,
+        // custom pattern validation or author; must be two separate words as Name and Family name.
+        @field:Pattern(
+            regexp = "\\b[a-zA-Z]+\\b(?:\\s+\\b[a-zA-Z]+\\b)+",
+            message = "Author must at least consist of a first and last name"
+        )
+        val author: String,
         @field: NotBlank(message = "Title can't be blank")
         val title: String,
-        @field: NotBlank(message = "Content can't be blank")
+        @field: Length(
+            min = 5,
+            max = 500,
+            message = "Content must be between 5 and 500 characters",
+        )
         val content: String,
         val color: Long,
+        @field: Password
+        val password: String,
     )
 
     data class NoteResponse(

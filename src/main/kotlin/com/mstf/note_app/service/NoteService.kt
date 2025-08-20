@@ -39,6 +39,7 @@ class NoteService(
         val note = noteRepository.save(
             Note(
                 id = body.id?.let { ObjectId(it) } ?: ObjectId.get(),
+                author = body.author,
                 title = body.title,
                 content = body.content,
                 color = body.color,
